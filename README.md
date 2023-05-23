@@ -27,7 +27,7 @@ npm run build
 
 Se te compilará el código de typescript a javascript en la carpeta dist
 
-Luego creas un archivo con nombre `.env` donde vas a añadir dos variables, la primer variable es `MONGO_URI` a esta variable le vas a añadir tu mongo URI, asegúrate de ingresarle bien y reemplazar password por la contraseña del usuario con acceso a la base de datos
+Luego creas un archivo con nombre `.env`en el directorio root del proyecto ( /.env ) donde vas a añadir dos variables, la primer variable es `MONGO_URI` a esta variable le vas a añadir tu mongo URI, asegúrate de ingresarla bien y reemplazar password por la contraseña del usuario con acceso a la base de datos
 Posteriormente, crea otra variable con el nombre `SECRET` esta variable será el "secreto" o firma del JWT token
   
 Y listo, puedes empezar a usar tu backend, disfruta ^^
