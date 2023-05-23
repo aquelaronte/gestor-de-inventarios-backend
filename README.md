@@ -130,7 +130,7 @@ Al enviar estos datos, la base de datos encripta la contraseña con bcrypt, el s
     Obtén la información de `total_sales` de la base de datos, sirve para ver el historial de ventas
     
   POST:
-    Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un dato llamado `sold_products` el cual tiene que contener un array de objetos con los valores `id_product, units´, el valor `id_product` relaciona el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
+    Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un dato llamado `sold_products` el cual tiene que contener un array de objetos con los valores `id_product, units`, el valor `id_product` relaciona el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
     
  ```javascript
  {
