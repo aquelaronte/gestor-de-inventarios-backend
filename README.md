@@ -32,7 +32,9 @@ Posteriormente, crea otra variable con el nombre `SECRET` esta variable será el
   
 Y listo, puedes empezar a usar tu backend, disfruta ^^
 
-  
+Ejecutalo con `npm run start`
+
+NOTA: SI LO QUIERE EJECUTAR CON TYPESCRIPT, INSTALA TS-NODE `npm I -g ts-node` y ejecutalo con `npm run dev`
   
 El servidor cuenta con las siguientes rutas
 
