@@ -35,11 +35,11 @@ Posteriormente, crea otra variable con el nombre `SECRET` esta variable será el
 
 Y listo, puedes empezar a usar tu backend, disfruta ^^
 
-Ejecutalo con `npm run start`
+Ejecútalo con `npm run start`
 
-NOTA: SI LO QUIERES EJECUTAR CON TYPESCRIPT, INSTALA TS-NODE `npm I -g ts-node` y ejecutalo con `npm run dev`
+NOTA: SI LO QUIERES EJECUTAR CON TYPESCRIPT INSTALA TS-NODE `npm i -g ts-node` y ejecútalo con `npm run dev`
 
-El servidor cuenta con las siguientes rutas
+El servidor cuenta con las siguientes rutas:
 
 - /api/auth/register : crea una cuenta
 - /api/auth/login : inicia sesión
@@ -69,21 +69,21 @@ Al enviar estos datos, la base de datos encripta la contraseña con bcrypt, el s
 
 A esta ruta únicamente puedes hacer `POST` enviando los datos que ingresaste en `email` y `password`, el sistema respondera con tres datos: un JsonWebToken (JWT), un id, y un pass
 
-El JWT tiene que incluirse en el header de authorization con el prefix Bearer (`Bearer <JWT>`), el pass y el id tienen que incluirse tambien en los headers de las peticiones HTTP con el mismo nombre, para el id, tiene que incluir un header llamado id e incluir el valor arrojado por el sistema, lo mismo con el pass
+El JWT tiene que incluirse en el header de Authorization con el prefix Bearer (`Bearer <JWT>`), el pass y el id tienen que incluirse tambien en los headers de las peticiones HTTP con el mismo nombre, para el id, tiene que incluir un header llamado id e incluir el valor arrojado por el sistema, lo mismo con el pass
 
-El JWT sirve para que el sistema detecte al usuario como si ya iniciara sesión, el id y el pass sirve para que las próximas acciones que haga el usuario pueda encontrarse en la base de datos, para hacer peticiones a las otras rutas hay que tener obligatoriamente estos 3 valores, de lo contrario el sistema no autorizará al usuario para hacer peticiones a otras rutas
+El JWT sirve para que el sistema detecte al usuario si ya inició sesión, el id y el pass sirve para que las próximas acciones que haga el usuario pueda encontrarse en la base de datos, para hacer peticiones a las otras rutas hay que tener obligatoriamente estos 3 valores, de lo contrario el sistema no autorizará al usuario para hacer peticiones a otras rutas
 
 ## /api/account/user
 
-A esta ruta puedes hacer `GET, PUT, DELETE`:
+A esta ruta puedes hacer `GET, PUT, DELETE` :
 
 ### GET:
 
-    Obtiene toda la información del usuario incluyendo productos añadidos y ventas hechas
+Obtiene toda la información del usuario incluyendo productos añadidos y ventas hechas
 
 ### PUT:
 
-    Actualiza la información de los productos del usuario en la base de datos, para ello, debes enviar solo el dato o datos que quieres cambiar, por ejemplo:
+Actualiza la información de los productos del usuario en la base de datos, para ello, debes enviar solo el dato o datos que quieres cambiar, por ejemplo:
 
 ```javascript
 {
@@ -91,11 +91,11 @@ A esta ruta puedes hacer `GET, PUT, DELETE`:
 }
 ```
 
-    Al solo cambiar el email, el único dato que se actualiza es este mismo, en caso de que se actualice la contraseña, esta se vuelve a encriptar y requerirá hacer otra vez login en su respectiva ruta porque los validadores de las otras rutas no aceptarán la contraseña vieja
+Al solo cambiar el email, el único dato que se actualiza es este mismo, en caso de que se actualice la contraseña, esta se vuelve a encriptar y requerirá hacer otra vez login en su respectiva ruta porque los validadores de las otras rutas no aceptarán la contraseña vieja
 
 ### DELETE:
 
-    Borra la cuenta unicamente enviando la petición
+Borra la cuenta unicamente enviando la petición
 
 ## /api/account/stock
 
@@ -103,11 +103,11 @@ A esta ruta puedes hacer `GET, POST, PUT, DELETE`:
 
 ### GET:
 
-    Obtiene los productos agregados al apartado de `products` en la cuenta
+Obtiene los productos agregados al apartado de `products` en la cuenta
 
 ### POST:
 
-    Agrega un producto al apartado de `products` en la cuenta enviando los datos `name, purchase_price, sale_price, units`, de tal manera donde `name` es el nombre del producto, `purchase_price` es el precio de compra, `sale_price` es el precio de venta y `units` son las unidades en stock
+Agrega un producto al apartado de `products` en la cuenta enviando los datos `name, purchase_price, sale_price, units`, de tal manera donde `name` es el nombre del producto, `purchase_price` es el precio de compra, `sale_price` es el precio de venta y `units` son las unidades en stock
 
 ```javascript
 {
@@ -120,11 +120,11 @@ A esta ruta puedes hacer `GET, POST, PUT, DELETE`:
 
 ### DELETE:
 
-    Elimina un producto de la base de datos enviando el `_id` que mongoDB asigna automáticamente, este dato lo puedes encontrar haciendo `GET` a esta misma ruta
+Elimina un producto de la base de datos enviando el `_id` que mongoDB asigna automáticamente, este dato lo puedes encontrar haciendo `GET` a esta misma ruta
 
 ### PUT:
 
-    Actualiza un producto de la base de datos enviando el `_id` del producto y el dato o datos que se desee cambiar:
+Actualiza un producto de la base de datos enviando el `_id` del producto y el dato o datos que se desee cambiar:
 
 ```javascript
 {
@@ -134,7 +134,7 @@ A esta ruta puedes hacer `GET, POST, PUT, DELETE`:
 }
 ```
 
-    Ahora en la base de datos tienes el producto del id con el `sale_price` equivalente a 3000 y units equivalente a 11 (Por cuestiones lógicas, estos cambios no afectan a las ventas hechas antes de actualizar el producto)
+Ahora en la base de datos tienes el producto del id con el `sale_price` equivalente a 3000 y units equivalente a 11 (Por cuestiones lógicas, estos cambios no afectan a las ventas hechas antes de actualizar el producto)
 
 ## /api/sale
 
@@ -142,11 +142,11 @@ A esta ruta puedes hacer `GET, POST, DELETE`, sirve para registrar una venta en 
 
 ### GET:
 
-    Obtén la información de `total_sales` de la base de datos, sirve para ver el historial de ventas
+Obtén la información de `total_sales` de la base de datos, sirve para ver el historial de ventas
 
 ### POST:
 
-    Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un dato llamado `sold_products` el cual tiene que contener un array de objetos con los valores `id_product, units`, el valor `id_product` se relaciona con el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
+Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un dato llamado `sold_products` el cual tiene que contener un array de objetos con los valores `id_product, units`, el valor `id_product` se relaciona con el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
 
 ```javascript
 {
@@ -235,4 +235,4 @@ El por qué de tantos totales es porque se planea recopilar esos datos para fine
 
 ### DELETE:
 
-    Para esta petición tienes que enviar dos datos: `id_day` (la fecha de la venta en formato AA:MM:DD) y `id_sale` (la fecha de la venta en formato HH:MM:SS.ms) no los recomiendo memorizarselos o ingresarlos manualmente, en su lugar, puedes hacer un `GET` a la misma ruta y copiar dichos datos que encontraras en el valor `date`
+Para esta petición tienes que enviar dos datos: `id_day` (la fecha de la venta en formato AA:MM:DD) y `id_sale` (la fecha de la venta en formato HH:MM:SS.ms) no los recomiendo memorizarselos o ingresarlos manualmente, en su lugar, puedes hacer un `GET` a la misma ruta y copiar dichos datos que encontraras en el valor `date`
