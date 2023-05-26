@@ -2,7 +2,7 @@ import { compare } from "bcryptjs";
 import { UserModel } from "../models/user";
 import { encrypt } from "../utils/encrypt.handler";
 import { createToken } from "../utils/jwt.handler";
-import { UserSchema } from "../interfaces/user.interface";
+import { UserLogin, UserRegister } from "../interfaces/auth.interface";
 
 /**
  * Registra un usuario a la base de datos
@@ -15,7 +15,7 @@ async function registerUser({
   email,
   password,
   company,
-}: UserSchema) {
+}: UserRegister) {
   const verifyUser = await UserModel.findOne({ email });
   if (verifyUser) {
     return "USER IS ALREADY REGISTERED";
@@ -38,7 +38,7 @@ async function registerUser({
  * @param param0 OBjeto tipo UserSchema
  * @returns Un JWT
  */
-async function loginUser({ email, password }: UserSchema) {
+async function loginUser({ email, password }: UserLogin) {
   const verifyUser = await UserModel.findOne({ email });
   if (!verifyUser) {
     return "USER IS NOT REGISTERED";

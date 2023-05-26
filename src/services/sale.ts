@@ -1,11 +1,12 @@
 import { UserModel } from "../models/user";
 import { SoldProduct, TotalSale, Sold } from "../interfaces/user.interface";
+import { zeroPad } from "../utils/zeroPad.util";
 
 /**
  * Obtiene las ventas de la base de datos
  * @param id Identificador del usuario
  * @param pass Contraseña encriptada del usuario
- * @returns Si fue exitosa la operación
+ * @returns Las ventas del usuario
  */
 async function getSales(id: string, pass: string) {
   const user = await UserModel.findById(id);
@@ -33,19 +34,35 @@ async function addSale(id: string, pass: string, soldProducts: SoldProduct[]) {
   if (pass !== user.password) {
     return "INCORRECT PASSWORD";
   }
-  if (!user.products || !user.total_sales) {
-    return "INVALID REGISTRY";
+  if (user.products.length == 0) {
+    return "USER DON'T HAVE PRODUCTS";
   }
+
+  // Validar la lista pasada
+  soldProducts.forEach((product, index) => {
+    if (product.id_product === undefined) {
+      return `Product number ${index} on list don't provide an id`;
+    }
+    if (product.units === undefined) {
+      return `Product number ${index} on list don't provide units has been sold`;
+    }
+  });
 
   const calendar = new Date();
 
   // Template string que contiene el dia en formato AA-MM-DD
-  const id_day = `${calendar.getFullYear()}-${calendar.getMonth()}-${calendar.getDate()}`;
-  const id_sale = `${calendar.getHours()}:${calendar.getMinutes()}:${calendar.getSeconds()}.${calendar.getMilliseconds()}`;
+  const id_day = `${calendar.getFullYear()}-${zeroPad(
+    calendar.getMonth() + 1
+  )}-${zeroPad(calendar.getDate())}`;
+
+  // Template string que contiene la hora en formato HH:MM:SS.ms
+  const id_sale = `${zeroPad(calendar.getHours())}:${zeroPad(
+    calendar.getMinutes()
+  )}:${zeroPad(calendar.getSeconds())}.${calendar.getMilliseconds()}`;
 
   let last_index = user.total_sales!.length - 1;
 
-  // Se abre la caja de hoy, si ya esta abierta entonces pasamos a solo añadir productos
+  // Se abre la primera caja
   if (last_index == -1) {
     last_index++;
   }
@@ -86,7 +103,7 @@ async function addSale(id: string, pass: string, soldProducts: SoldProduct[]) {
   user.total_sales[last_index].total! += total;
   user.isNew = false;
   await user.save();
-  return "SALE SUCCESSFULLY ADDED";
+  return user.total_sales;
 }
 
 /**
@@ -110,15 +127,14 @@ async function removeSale(
   if (pass !== user.password) {
     return "INCORRECT PASSWORD";
   }
-  if (!user.total_sales) {
-    return "INVALID REGISTRY";
+  if (user.products.length == 0) {
+    return "USER DON'T HAVE PRODUCTS";
   }
 
   // Averiguamos el indice del día
   let index_total_sale = user.total_sales!.findIndex(
     (total_sale) => total_sale.date == id_day
   );
-  console.log(index_total_sale);
 
   if (index_total_sale == -1) {
     return "DAY NOT FOUND";
@@ -133,16 +149,18 @@ async function removeSale(
     return "SALE NOT FOUND";
   }
 
-  const product =
-    user.total_sales![index_total_sale].sold![index_sale as number]!;
+  const sold = user.total_sales![index_total_sale].sold![index_sale as number]!;
+
+  // Antes de eliminar la venta, se restauran los productos del stock
   for (let i = 0; i < user.products!.length; i++) {
-    for (let j = 0; j < product.products.length; j++) {
-      if (user.products![i]._id?.toString() == product.products[j].id_product) {
-        user.products![i].units += product.products[j].units;
+    for (let j = 0; j < sold.products.length; j++) {
+      if (user.products![i]._id?.toString() == sold.products[j].id_product) {
+        user.products![i].units += sold.products[j].units;
       }
     }
   }
-  user.total_sales[index_total_sale].total! -= product.total;
+  // Se restaura de igual manera el total sin la venta hecha
+  user.total_sales[index_total_sale].total! -= sold.total;
 
   // Despues de validar que existe el dia y la venta, procedemos a borrar la venta
   user.total_sales![index_total_sale].sold?.splice(index_sale as number, 1);

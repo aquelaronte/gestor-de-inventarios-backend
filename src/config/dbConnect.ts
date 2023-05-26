@@ -10,11 +10,9 @@ function mongoConnect(uri: string): void {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => console.log("Connection with database was successfull"))
+    .then((): void => console.log(`Connection with database was successfull`))
     .catch((reason: unknown) =>
-      console.log(
-        "Connection with database was unsuccessfull, reason was: \n" + reason
-      )
+      console.log(`Connection with database was unsuccessfull: \n${reason}`)
     );
 }
 

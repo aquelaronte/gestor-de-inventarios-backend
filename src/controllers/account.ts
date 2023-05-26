@@ -8,15 +8,13 @@ import {
   removeProduct,
   updateProduct,
   updateUser,
-} from "../services/product";
+} from "../services/account";
+import { UserUpdate } from "../interfaces/account.interface";
 
 /**
- * Envia al usuario la información de su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
+ * Envia al usuario la información de su cuenta
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function userInfo({ headers }: Request, res: Response) {
   try {
@@ -30,25 +28,22 @@ async function userInfo({ headers }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la actualización de su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos y el que quira actualizar
+ * Actualiza la información de la cuenta del usuario
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function userUpdateInfo({ headers, body }: Request, res: Response) {
   try {
     const { id, pass } = headers;
     const { firstname, lastname, company, email, password } = body;
-    const response = await updateUser(id as string, pass as string, {
+    const data: UserUpdate = {
       firstname,
       lastname,
       company,
       email,
       password,
-    });
+    };
+    const response = await updateUser(id as string, pass as string, data);
     res.status(200);
     res.send({ res: response });
   } catch (err) {
@@ -57,12 +52,9 @@ async function userUpdateInfo({ headers, body }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de borrar su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
+ * Borra al usuario de la base de datos
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function userDelete({ headers }: Request, res: Response) {
   try {
@@ -76,12 +68,9 @@ async function userDelete({ headers }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de obtener los productos de su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
+ * Envia al usuario la información de sus productos
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function productList({ headers }: Request, res: Response) {
   try {
@@ -95,13 +84,9 @@ async function productList({ headers }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de obtener los productos de su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos requeridos
+ * Añade un producto al perfil del usuario
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function productAdd({ headers, body }: Request, res: Response) {
   try {
@@ -121,13 +106,9 @@ async function productAdd({ headers, body }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de borrar un producto de su perfil, para obtenerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos requeridos
+ * Borra un producto de la base de datos
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function productRemove({ headers, body }: Request, res: Response) {
   try {
@@ -146,13 +127,9 @@ async function productRemove({ headers, body }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de actualizar un producto de su perfil, para hacerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos requeridos
+ * Actualiza un producto de la base de datos
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function productUpdate({ headers, body }: Request, res: Response) {
   try {

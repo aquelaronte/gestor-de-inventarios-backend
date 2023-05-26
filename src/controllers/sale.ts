@@ -3,12 +3,9 @@ import { handleHTTPError } from "../utils/error.handler";
 import { addSale, getSales, removeSale } from "../services/sale";
 
 /**
- * Envia al usuario si fue exitosa la operación de obtener las ventas de su perfil, para obtenerlas, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
+ * Obtiene las ventas totales del usuario
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function getProductSales({ headers }: Request, res: Response) {
   try {
@@ -22,13 +19,9 @@ async function getProductSales({ headers }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de añadir una venta a su perfil, para hacerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos requeridos
- * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * Registra una venta en el perfil del usuario
+ * @param param0 Objeto d petición HTTP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function makeSale({ body, headers }: Request, res: Response) {
   try {
@@ -43,13 +36,9 @@ async function makeSale({ body, headers }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitosa la operación de borrar una venta de su perfil, para hacerlo, el usuario requiere:
- *  - Un JWT en su header de authorization (Bearer ....)
- *  - Un ID en su header (id)
- *  - Un password en su header (pass)
- *  - Un objeto JSON en el body de su petición HTTP con todos los datos requeridos
+ * Borra una venta del perfil del usuario
  * @param param0 Objeto de petición HTTP de express
- * @param res Objeto de respuesta HTPP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function deleteSale({ body, headers }: Request, res: Response) {
   try {

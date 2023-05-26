@@ -1,9 +1,5 @@
-import { Schema, model, Types, Document } from "mongoose";
-import uniqueValidator from "mongoose-unique-validator";
-import {
-  UserSchema as AuthUserSchema,
-  SoldProduct,
-} from "../interfaces/user.interface";
+import { Schema, model, Document } from "mongoose";
+import { UserSchema as AuthUserSchema } from "../interfaces/user.interface";
 
 interface UserDocument extends Document, AuthUserSchema {}
 
@@ -84,7 +80,7 @@ const UserSchema = new Schema<UserDocument>({
                 unique: false,
               },
               total: {
-                type: String,
+                type: Number,
                 required: false,
                 unique: false,
               },
@@ -105,8 +101,6 @@ const UserSchema = new Schema<UserDocument>({
     },
   ],
 });
-
-UserSchema.plugin(uniqueValidator);
 
 const UserModel = model<UserDocument>("User", UserSchema);
 

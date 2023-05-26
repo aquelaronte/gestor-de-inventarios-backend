@@ -8,12 +8,13 @@ import {
   userDelete,
   userInfo,
   userUpdateInfo,
-} from "../controllers/products";
+} from "../controllers/account";
 import {
   validateProductInfo,
-  validateQueryParams,
-  validateUserInfo,
-} from "../validators/products";
+  validateUpdateProductInfo,
+  validateUpdateUserInfo,
+} from "../validators/account";
+import { validateQueryParams } from "../utils/queryParams.validator";
 
 const router: Router = Router();
 
@@ -29,7 +30,7 @@ router.put(
   "/user",
   checkSession,
   validateQueryParams,
-  validateUserInfo,
+  validateUpdateUserInfo,
   userUpdateInfo
 );
 
@@ -66,7 +67,7 @@ router.put(
   "/stock",
   checkSession,
   validateQueryParams,
-  validateProductInfo,
+  validateUpdateProductInfo,
   productUpdate
 );
 

@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "A backend - API app for stock management",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/app.ts",

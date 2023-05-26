@@ -3,9 +3,9 @@ import { loginUser, registerUser } from "../services/auth";
 import { handleHTTPError } from "../utils/error.handler";
 
 /**
- * Envía al usuario si fue exitoso el registro
- * @param param0 JSON enviado al cuerpo de la petición
- * @param res Objeto de respuesta de express
+ * Registra al usuario en la base de dats
+ * @param param0 Objeto de petición HTTP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function register({ body }: Request, res: Response) {
   try {
@@ -25,9 +25,9 @@ async function register({ body }: Request, res: Response) {
 }
 
 /**
- * Envia al usuario si fue exitoso el inicio de sesión
- * @param param0 JSON enviado al cuerpo de la petición
- * @param res Objeto de respuesta de express
+ * Verifica al usuario en la base de datos
+ * @param param0 Objeto de petición HTTP de express
+ * @param res Objeto de respuesta HTTP de express
  */
 async function login({ body }: Request, res: Response) {
   try {
