@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
+import { addSale, getSales, removeSale } from "../services/sales";
+
 import { handleHTTPError } from "../utils/error.handler";
-import { addSale, getSales, removeSale } from "../services/sale";
 
 /**
  * Obtiene las ventas totales del usuario
@@ -26,8 +27,7 @@ async function getProductSales({ headers }: Request, res: Response) {
 async function makeSale({ body, headers }: Request, res: Response) {
   try {
     const { id, pass } = headers;
-    const { sold_products } = body;
-    const response = await addSale(id as string, pass as string, sold_products);
+    const response = await addSale(id as string, pass as string, body);
     res.status(200);
     res.send({ res: response });
   } catch (err) {

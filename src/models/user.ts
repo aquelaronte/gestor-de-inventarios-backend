@@ -1,33 +1,36 @@
-import { Schema, model, Document } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+
 import { UserSchema as AuthUserSchema } from "../interfaces/user.interface";
 
 interface UserDocument extends Document, AuthUserSchema {}
 
 const UserSchema = new Schema<UserDocument>({
-  firstname: {
-    type: String,
-    unique: false,
-    required: true,
-  },
-  lastname: {
-    type: String,
-    unique: false,
-    required: true,
-  },
-  company: {
-    type: String,
-    unique: false,
-    required: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    unique: false,
-    required: true,
+  profile: {
+    firstname: {
+      type: String,
+      unique: false,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      unique: false,
+      required: true,
+    },
+    company: {
+      type: String,
+      unique: false,
+      required: false,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    password: {
+      type: String,
+      unique: false,
+      required: true,
+    },
   },
   products: [
     {
@@ -53,23 +56,23 @@ const UserSchema = new Schema<UserDocument>({
       },
     },
   ],
-  total_sales: [
+  sales: [
     {
       date: {
         type: String,
         required: false,
         unique: false,
       },
-      sold: [
+      sales_info: [
         {
-          date: {
+          time: {
             type: String,
             required: false,
             unique: false,
           },
-          products: [
+          sold_items: [
             {
-              id_product: {
+              product_id: {
                 type: String,
                 required: false,
                 unique: false,
@@ -79,21 +82,21 @@ const UserSchema = new Schema<UserDocument>({
                 required: false,
                 unique: false,
               },
-              total: {
+              product_total: {
                 type: Number,
                 required: false,
                 unique: false,
               },
             },
           ],
-          total: {
+          sale_total: {
             type: Number,
             required: false,
             unique: false,
           },
         },
       ],
-      total: {
+      sales_total: {
         type: Number,
         required: false,
         unique: false,

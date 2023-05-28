@@ -1,8 +1,9 @@
-import { compare } from "bcryptjs";
-import { UserModel } from "../models/user";
-import { encrypt } from "../utils/encrypt.handler";
-import { createToken } from "../utils/jwt.handler";
 import { UserLogin, UserRegister } from "../interfaces/auth.interface";
+
+import { UserModel } from "../models/user";
+import { compare } from "bcryptjs";
+import { createToken } from "../utils/jwt.handler";
+import { encrypt } from "../utils/encrypt.handler";
 
 /**
  * Registra un usuario a la base de datos
@@ -22,11 +23,15 @@ async function registerUser({
   }
   const hashPass = await encrypt(password as string);
   const newUser = await UserModel.create({
-    firstname,
-    lastname,
-    email,
-    password: hashPass,
-    company,
+    profile: {
+      firstname,
+      lastname,
+      email,
+      password: hashPass,
+      company,
+    },
+    products: [],
+    sales: [],
   });
   if (newUser) {
     return "USER WAS SUCCESSFULLY REGISTERED";
@@ -39,13 +44,13 @@ async function registerUser({
  * @returns Un JWT
  */
 async function loginUser({ email, password }: UserLogin) {
-  const verifyUser = await UserModel.findOne({ email });
-  if (!verifyUser) {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
     return "USER IS NOT REGISTERED";
   }
   const verifyPass = await compare(
     password as string,
-    verifyUser.password as string
+    user.profile.password as string
   );
   if (!verifyPass) {
     return "INCORRECT PASSWORD";
@@ -56,8 +61,8 @@ async function loginUser({ email, password }: UserLogin) {
   // El usuario se tiene que encargar de poner estos datos en los headers de sus sigueintes peticiones
   return {
     auth: token,
-    id: verifyUser._id,
-    pass: verifyUser.password,
+    id: user._id,
+    pass: user.profile.password,
   };
 }
 

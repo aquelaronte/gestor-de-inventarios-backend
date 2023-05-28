@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import { UserLogin, UserRegister } from "../interfaces/auth.interface";
 import { loginUser, registerUser } from "../services/auth";
+
 import { handleHTTPError } from "../utils/error.handler";
 
 /**
@@ -10,13 +12,14 @@ import { handleHTTPError } from "../utils/error.handler";
 async function register({ body }: Request, res: Response) {
   try {
     const { firstname, lastname, email, password, company } = body;
-    const response = await registerUser({
+    const data: UserRegister = {
       firstname,
       lastname,
       email,
       password,
       company,
-    });
+    };
+    const response = await registerUser(data);
     res.status(200);
     res.send(response);
   } catch (err) {
@@ -32,7 +35,11 @@ async function register({ body }: Request, res: Response) {
 async function login({ body }: Request, res: Response) {
   try {
     const { email, password } = body;
-    const response = await loginUser({ email, password });
+    const data: UserLogin = {
+      email,
+      password,
+    };
+    const response = await loginUser(data);
     res.status(200);
     res.send(response);
   } catch (err) {

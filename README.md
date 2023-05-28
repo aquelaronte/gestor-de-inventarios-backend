@@ -146,33 +146,31 @@ Obtén la información de `total_sales` de la base de datos, sirve para ver el h
 
 ### POST:
 
-Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un dato llamado `sold_products` el cual tiene que contener un array de objetos con los valores `id_product, units`, el valor `id_product` se relaciona con el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
+Registra una venta, para ello tienes que enviar un JSON al body del request HTTP un array el cual tiene que contener objetos con los valores `id_product, units`, el valor `id_product` se relaciona con el `_id` del producto vendido y `units` son las unidades vendidas, el sistema resta esas `units` con el stock con sus respectivas validaciones de datos, un ejemplo sería
 
 ```javascript
 {
- "sold_products" : [
-   {
-     "id_product": "q253684329xM",
-     "units": 2
-   },
-   {
-     "id_product": "1029MnS9229xV",
-     "units": 2
-   }
- ]
+  {
+    "id_product": "q253684329xM",
+    "units": 2
+  },
+  {
+    "id_product": "1029MnS9229xV",
+    "units": 2
+  }
 }
 ```
 
-Esto generará un objeto en el array `total_sales` de la cuenta
+Esto generará un objeto en el array `sales` del usuario
 
-Este objeto contendrá tres datos: date, sold y total (los datos con nombre \_id son asignados automáticamente por mongoDB)
-Este objeto contiene todas las ventas hechas en el día, el dato `date` contiene la fecha que se hacen las ventas en formato AA-MM-DD, el array `sold` contiene las horas que se hacen las ventas, los productos vendidos y el total de toda la venta, el dato `total` contiene el total de dinero vendido en un día
+Este objeto contendrá tres datos: date, sales_info y sales_total (los datos con nombre \_id son asignados automáticamente por mongoDB)
+Este objeto contiene todas las ventas hechas en el día, el dato `date` contiene la fecha que se hacen las ventas en formato AA-MM-DD, el array `sales_info` contiene las horas que se hacen las ventas, los productos vendidos y el total de toda la venta, el dato `sales_total` contiene el total de dinero vendido en un día
 
-Por ejemplo, si es 20 de abril y registras una venta entonces el sistema abrirá un objeto que contiene las ventas del 20 de abril, esa fecha se registra en el dato `date`, también abrirá un objeto en el array `sold`, este objeto contará con otro dato llamado `date, products, total`
+Por ejemplo, si es 20 de abril y registras una venta entonces el sistema abrirá un objeto que contiene las ventas del 20 de abril, esa fecha se registra en el dato `date`, también abrirá un objeto en el array `sales_info`, este objeto contará con otro dato llamado `time, sold_items, sale_total`
 
-El dato `date` contiene la hora que se hizo la venta en formato HH:MM:SS.ms
-El array `products` contiene los productos vendidos en el día, cada producto vendido es representado por un objeto dentro de este array, este objeto contiene el id del producto, las unidades vendidas y el total vendido de ese producto
-El dato `total` contiene el total de la venta
+El dato `time` contiene la hora que se hizo la venta en formato HH:MM:SS.ms
+El array `sold_items` contiene los productos vendidos en el día, cada producto vendido es representado por un objeto dentro de este array, este objeto contiene el id del producto, las unidades vendidas y el total vendido de ese producto
+El dato `sale_total` contiene el total de la venta
 
 Ahora si ya no es 20 de abril sino 21 de abril y se hace una venta, el sistema abrirá automáticamente un objeto con el `date` con la fecha 21 de abril y los otros datos
 
@@ -182,42 +180,42 @@ Esto en el sistema se vería así
 
 ```javascript
 {
-  // total_sales es un dato presente en el perfil del usuario donde se encuentra tambien el password, el email, etc...
-  "total_sales": [
+  // sales es un dato presente en el perfil del usuario donde se encuentra tambien el password, el email, etc...
+  "sales": [
     {
       "_id": "SJSJFM23"
       "date": "2023-04-20",
-      "sold": [
+      "sales_info": [
         {
-          "date": "18:59:03.196"
-          "products": [
+          "time": "18:59:03.196"
+          "sold_tems": [
             {
               "_id": "sdalk121214SDJ",
               "product_id": "ask92941LLSAJM",
               "units": 5,
-              "total": 15000
+              "product_total": 15000
             },
             {
               "_id": "mMAS241KSLs",
               "product_id": "asJAJJFMZNF",
               "units": 1,
-              "total": 2000
+              "product_total": 2000
             },
             {
               "_id": "ASJ23",
               "product_id": "REAJSM",
               "units": 4,
               // Total de la venta de este producto
-              "total": 8000
+              "product_total": 8000
             }
           ],
           // Total de toda la venta
-          "total": 25000
+          "sale_total": 25000
         },
         // Otras ventas hechas en el día ...
       ],
       // Total de todas las ventas hechas en el día
-      "total" : 520000
+      "sales_total" : 520000
     },
     {
       "date": "2023-04-21",
@@ -236,3 +234,46 @@ El por qué de tantos totales es porque se planea recopilar esos datos para fine
 ### DELETE:
 
 Para esta petición tienes que enviar dos datos: `id_day` (la fecha de la venta en formato AA:MM:DD) y `id_sale` (la fecha de la venta en formato HH:MM:SS.ms) no los recomiendo memorizarselos o ingresarlos manualmente, en su lugar, puedes hacer un `GET` a la misma ruta y copiar dichos datos que encontraras en el valor `date`
+
+## Maquetación de datos:
+
+De manera mucho mas simplificada, te muestro la estructura de datos
+
+```javascript
+{
+  profile : {
+    firstname: 'nombre',
+    lastname: 'apellido',
+    email: 'correo',
+    password: 'contraseña',
+    company: 'nombre de la empresa (opcional)'
+  },
+  products: [
+    {
+      name: 'nombre del producto',
+      units: 'unidades compradas',
+      purchase_price: 'precio de compra',
+      sale_price: 'precio de venta'
+    }
+  ],
+  sales: [
+    {
+      date: 'fecha de la venta',
+      sales_info: [
+        {
+          time: 'hora de venta',
+          sold_items: [
+            {
+              product_id: 'identificador de producto',
+              units: 'unidades vendidas',
+              product_total: 'total de la venta por el producto'
+            }
+          ],
+          sale_total: 'total de la venta'
+        }
+      ],
+      total: 'total de ventas'
+    }
+  ]
+}
+```

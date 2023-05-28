@@ -3,7 +3,7 @@ interface UserRegister {
   lastname: string;
   email: string;
   password: string;
-  company: string;
+  company?: string;
 }
 
 interface UserLogin {

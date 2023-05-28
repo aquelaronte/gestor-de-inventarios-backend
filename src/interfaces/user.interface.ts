@@ -17,61 +17,69 @@ interface Product {
 
 /**
  * Interfaz de un producto vendido
- * id_product: identificador del producto vendido
+ * product_id: identificador del producto vendido
  * units: unidades del producto vendido
- * total: total de la venta por el producto (Autogenerado)
+ * product_total: total de la venta por el producto (Autogenerado)
  */
-interface SoldProduct {
+interface SoldItem {
   _id?: mongoose.Types.ObjectId;
-  id_product: string;
+  product_id: string;
   units: number;
-  total: number;
+  product_total?: number;
 }
 
 /**
  * Interfaz de una venta hecha
- * date: identificado de venta (Autogenerado, hora en formato HH:MM:SS.ms)
+ * time: identificador de venta (Autogenerado, hora en formato HH:MM:SS.ms)
  * products: lista de productos vendidos (array de la interfaz SoldProduct)
  * total: total de la venta hechas (Autogenerado)
  */
-interface Sold {
+interface SaleInfo {
   _id?: mongoose.Types.ObjectId;
-  date: string;
-  products: SoldProduct[];
-  total: number;
+  time?: string;
+  sold_items: SoldItem[];
+  sale_total: number;
 }
 
 /**
  * Interfaz de ventas hechas en un dia:
  * date: identificador de venta (Autoogenerado, día en formato AA-MM-DD)
- * sold: Lista de ventas hechas (array de la interfaz Sold)
- * total: total de las ventas hechas en un día
+ * sales_info: Lista de ventas hechas (array de la interfaz Sold)
+ * sales_total: total de las ventas hechas en un día
  */
-interface TotalSale {
+interface Sale {
   _id?: mongoose.Types.ObjectId;
   date: string;
-  sold: Sold[];
-  total: number;
+  sales_info: SaleInfo[];
+  sales_total: number;
 }
 
 /**
- * Interfaz de usuario:
+ * Interfaz de perfil:
  * firstname: primer nombre
  * lastname: segundo nombre
  * company: nombre del negocio
  * email: correo eletrónico del usuario
  * password: contraseña del usuario
- * products: lista de productos (Array de la interfaz Product)
- * total_sales: Lista de ventas por día (Array de la interfaz TotalSale)
  */
-interface UserSchema {
+interface Profile {
   firstname: string;
   lastname: string;
   company: string;
   email: string;
   password: string;
-  products: Product[];
-  total_sales: TotalSale[];
 }
 
-export { Product, SoldProduct, TotalSale, UserSchema, Sold };
+/**
+ * Interfaz de usuario:
+ * profile: información del perfil de usuario
+ * products: lista de productos (Array de la interfaz Product)
+ * total_sales: Lista de ventas por día (Array de la interfaz TotalSale)
+ */
+interface UserSchema {
+  profile: Profile;
+  products: Product[];
+  sales: Sale[];
+}
+
+export { Product, SoldItem, Sale, UserSchema, SaleInfo };
