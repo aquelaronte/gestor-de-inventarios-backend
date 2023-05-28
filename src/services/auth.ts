@@ -19,7 +19,7 @@ async function registerUser({
 }: UserRegister) {
   const verifyUser = await UserModel.findOne({ email });
   if (verifyUser) {
-    return "USER IS ALREADY REGISTERED";
+    throw new Error("USER IS ALREADY REGISTERED");
   }
   const hashPass = await encrypt(password as string);
   const newUser = await UserModel.create({
@@ -44,18 +44,14 @@ async function registerUser({
  * @returns Un JWT
  */
 async function loginUser({ email, password }: UserLogin) {
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ "profile.email": email });
   if (!user) {
-    return "USER IS NOT REGISTERED";
+    throw new Error("USER IS NOT REGISTERED");
   }
-  const verifyPass = await compare(
-    password as string,
-    user.profile.password as string
-  );
+  const verifyPass = await compare(password, user.profile.password);
   if (!verifyPass) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
-
   const token = createToken(email as string);
 
   // El usuario se tiene que encargar de poner estos datos en los headers de sus sigueintes peticiones

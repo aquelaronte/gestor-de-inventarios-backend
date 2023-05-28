@@ -10,7 +10,7 @@ const router: Router = Router();
 router.get("/", checkSession, validateQueryParams, userInfo);
 
 router.put(
-  "/user",
+  "/",
   checkSession,
   validateQueryParams,
   validateUpdateUserInfo,

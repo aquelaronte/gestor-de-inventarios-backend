@@ -11,10 +11,10 @@ import { zeroPad } from "../utils/zeroPad.util";
 async function getSales(id: string, pass: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
   return user.sales;
 }
@@ -29,22 +29,22 @@ async function getSales(id: string, pass: string) {
 async function addSale(id: string, pass: string, soldProducts: SoldItem[]) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
   if (user.products.length == 0) {
-    return "USER MUST HAVE AT LEAST ONE PRODUCT";
+    throw new Error("USER MUST HAVE AT LEAST ONE PRODUCT");
   }
 
   // Validar la lista pasada
   soldProducts.forEach((product, index) => {
     if (product.product_id === undefined) {
-      return `PRODUCT ${index} ON LIST DON'T PROVIDE AN ID`;
+      throw new Error(`PRODUCT ${index} ON LIST DON'T PROVIDE AN ID`);
     }
     if (product.units === undefined) {
-      return `PRODUCT ${index} ON LIST DON'T PROVIDE SOLD UNITS`;
+      throw new Error(`PRODUCT ${index} ON LIST DON'T PROVIDE SOLD UNITS`);
     }
   });
 
@@ -80,7 +80,7 @@ async function addSale(id: string, pass: string, soldProducts: SoldItem[]) {
       if (user.products[i]._id?.toString() == soldProducts[j].product_id) {
         // Verificamos si las unidades a vender son mayores que las que hay en stock
         if (user.products[i].units < soldProducts[j].units) {
-          return "INVALID SALE: sold units < product in stock";
+          throw new Error("INVALID SALE, SOLD UNITS < PRODUCT IN STOCK");
         }
         // Restamos las unidades del stock por las vendidas
         user.products[i].units -= soldProducts[j].units;
@@ -122,13 +122,13 @@ async function removeSale(
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
   if (user.products.length == 0) {
-    return "USER DON'T HAVE PRODUCTS";
+    throw new Error("USER DON'T HAVE PRODUCTS");
   }
 
   // Averiguamos el indice del día
@@ -137,7 +137,7 @@ async function removeSale(
   );
 
   if (sale_day == -1) {
-    return "DAY NOT FOUND";
+    throw new Error("DAY NOT FOUND");
   }
 
   // Averiguamos el índice de la venta
@@ -146,7 +146,7 @@ async function removeSale(
   );
 
   if (sale_time == -1) {
-    return "SALE NOT FOUND";
+    throw new Error("SALE NOT FOUND");
   }
 
   const sold = user.sales![sale_day].sales_info![sale_time as number]!;

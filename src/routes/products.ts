@@ -15,10 +15,10 @@ import { validateQueryParams } from "../utils/queryParams.validator";
 
 const router: Router = Router();
 
-router.get("/stock", checkSession, validateQueryParams, productList);
+router.get("/", checkSession, validateQueryParams, productList);
 
 router.post(
-  "/stock",
+  "/",
   checkSession,
   validateQueryParams,
   validateProductInfo,
@@ -26,13 +26,13 @@ router.post(
 );
 
 router.put(
-  "/stock",
+  "/",
   checkSession,
   validateQueryParams,
   validateUpdateProductInfo,
   productUpdate
 );
 
-router.delete("/stock", checkSession, validateQueryParams, productRemove);
+router.delete("/", checkSession, validateQueryParams, productRemove);
 
 export { router };

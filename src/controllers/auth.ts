@@ -23,7 +23,7 @@ async function register({ body }: Request, res: Response) {
     res.status(200);
     res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 
@@ -43,7 +43,7 @@ async function login({ body }: Request, res: Response) {
     res.status(200);
     res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n " + err);
+    handleHTTPError(res, 500, err);
   }
 }
 

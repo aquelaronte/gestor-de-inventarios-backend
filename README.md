@@ -43,8 +43,8 @@ El servidor cuenta con las siguientes rutas:
 
 - /api/auth/register : crea una cuenta
 - /api/auth/login : inicia sesión
-- /api/account/user : información del usuario
-- /api/account/stock : información de productos añadidos
+- /api/profile : información del usuario
+- /api/products : información de productos añadidos
 - /api/sale : información de ventas
 
 ## /api/auth/register
@@ -73,7 +73,7 @@ El JWT tiene que incluirse en el header de Authorization con el prefix Bearer (`
 
 El JWT sirve para que el sistema detecte al usuario si ya inició sesión, el id y el pass sirve para que las próximas acciones que haga el usuario pueda encontrarse en la base de datos, para hacer peticiones a las otras rutas hay que tener obligatoriamente estos 3 valores, de lo contrario el sistema no autorizará al usuario para hacer peticiones a otras rutas
 
-## /api/account/user
+## /api/profile
 
 A esta ruta puedes hacer `GET, PUT, DELETE` :
 
@@ -97,7 +97,7 @@ Al solo cambiar el email, el único dato que se actualiza es este mismo, en caso
 
 Borra la cuenta unicamente enviando la petición
 
-## /api/account/stock
+## /api/products
 
 A esta ruta puedes hacer `GET, POST, PUT, DELETE`:
 

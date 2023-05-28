@@ -1,8 +1,7 @@
-import { ProductUpdate, UserUpdate } from "../interfaces/account.interface";
 import { encrypt, verify } from "../utils/encrypt.handler";
 
-import { Product } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
+import { UserUpdate } from "../interfaces/account.interface";
 
 /**
  * Obtiene la información de perfil del usuario desde la base de datos
@@ -13,12 +12,12 @@ import { UserModel } from "../models/user";
 async function getUser(id: string, pass: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
-  return user.profile;
+  return user;
 }
 
 /**
@@ -35,10 +34,10 @@ async function updateUser(
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
-  if (pass != user.profile.password) {
-    return "INCORRECT PASSWORD";
+  if (pass !== user.profile.password) {
+    throw new Error("INCORRECT PASSWORD");
   }
 
   if (firstname !== undefined && user.profile.firstname !== firstname) {
@@ -87,10 +86,10 @@ async function updateUser(
 async function deleteUser(id: string, pass: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
 
   await user.deleteOne();

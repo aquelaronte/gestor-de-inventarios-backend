@@ -8,7 +8,7 @@ import { Response } from "express";
  */
 function handleHTTPError(res: Response, code: number, message: unknown) {
   res.status(code);
-  res.send(message);
+  res.send({ err: message});
 }
 
 export { handleHTTPError };

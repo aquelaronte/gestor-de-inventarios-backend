@@ -11,10 +11,10 @@ import { UserModel } from "../models/user";
 async function getProducts(id: string, pass: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
   return user.products;
 }
@@ -33,10 +33,10 @@ async function addProduct(
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
 
   user.products!.push({
@@ -61,10 +61,10 @@ async function addProduct(
 async function removeProduct(id: string, pass: string, productId: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
 
   /**
@@ -76,7 +76,7 @@ async function removeProduct(id: string, pass: string, productId: string) {
   );
 
   if (productIndex === -1) {
-    return "PRODUCT NOT FOUND";
+    throw new Error("PRODUCT NOT FOUND");
   }
 
   // Borra el producto registrado en el indice
@@ -102,10 +102,10 @@ async function updateProduct(
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    return "USER NOT FOUND";
+    throw new Error("USER NOT FOUND");
   }
   if (pass !== user.profile.password) {
-    return "INCORRECT PASSWORD";
+    throw new Error("INCORRECT PASSWORD");
   }
 
   /**
@@ -117,7 +117,7 @@ async function updateProduct(
   );
 
   if (productIndex === -1) {
-    return "PRODUCT NOT FOUND";
+    throw new Error("PRODUCT NOT FOUND");
   }
 
   // Validaciones, valida las propiedades, si las pasadas por el usuario son undefined entonces no se actualizan

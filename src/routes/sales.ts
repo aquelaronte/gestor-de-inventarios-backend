@@ -1,8 +1,9 @@
+import { deleteSale, getProductSales, makeSale } from "../controllers/sales";
+import { validateDeleteSale, validateMakeSale } from "../validators/sales";
+
 import { Router } from "express";
 import { checkSession } from "../middlewares/checkSession";
-import { deleteSale, getProductSales, makeSale } from "../controllers/sale";
 import { validateQueryParams } from "../utils/queryParams.validator";
-import { validateDeleteSale, validateMakeSale } from "../validators/sale";
 
 const router: Router = Router();
 

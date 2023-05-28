@@ -15,7 +15,7 @@ async function getProductSales({ headers }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 
@@ -31,7 +31,7 @@ async function makeSale({ body, headers }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 
@@ -53,7 +53,7 @@ async function deleteSale({ body, headers }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 

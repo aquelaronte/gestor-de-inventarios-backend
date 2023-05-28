@@ -16,7 +16,7 @@ async function userInfo({ headers }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 
@@ -40,7 +40,7 @@ async function userUpdateInfo({ headers, body }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNALL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 
@@ -56,7 +56,7 @@ async function userDelete({ headers }: Request, res: Response) {
     res.status(200);
     res.send({ res: response });
   } catch (err) {
-    handleHTTPError(res, 500, "INTERNAL SERVER ERROR: \n" + err);
+    handleHTTPError(res, 500, err);
   }
 }
 

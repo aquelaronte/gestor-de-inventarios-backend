@@ -1,9 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+
 import { body } from "express-validator";
 import { validateResults } from "../utils/validate.handler";
 
 const validateMakeSale = [
-  body("sold_products").exists().isArray(),
+  body().exists().isArray(),
   (req: Request, res: Response, next: NextFunction) =>
     validateResults(req, res, next),
 ];
