@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon ./src/app.ts",
     "build": "npm install && tsc",
-    "start": "node ./InventusPhere.js"
+    "start": "node ./InventusPhere/app.js"
   },
   "keywords": [],
   "author": "",
