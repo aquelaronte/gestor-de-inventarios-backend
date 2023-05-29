@@ -21,7 +21,7 @@ async function register({ body }: Request, res: Response) {
     };
     const response = await registerUser(data);
     res.status(200);
-    res.send(response);
+    res.send({ res: response });
   } catch (err) {
     handleHTTPError(res, 500, err);
   }
@@ -41,7 +41,7 @@ async function login({ body }: Request, res: Response) {
     };
     const response = await loginUser(data);
     res.status(200);
-    res.send(response);
+    res.send({ res: response });
   } catch (err) {
     handleHTTPError(res, 500, err);
   }
