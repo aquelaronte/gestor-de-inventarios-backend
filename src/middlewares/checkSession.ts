@@ -1,6 +1,6 @@
-import { handleHTTPError } from "../utils/error.handler";
-import { verifyToken } from "../utils/jwt.handler";
 import { NextFunction, Request, Response } from "express";
+
+import { verifyToken } from "../utils/jwt.handler";
 
 /**
  * Verifica si el usuario inició sesión
@@ -16,7 +16,7 @@ function checkSession(req: Request, res: Response, next: NextFunction) {
   if (verified) {
     next();
   } else {
-    handleHTTPError(res, 401, "USER NEEDS VERIFICATION");
+    res.status(401).send("USER NEEDS VERIFICATION");
   }
 }
 

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { ValidationError, validationResult } from "express-validator";
+
 import { handleHTTPError } from "./error.handler";
 
 /**
@@ -17,8 +18,8 @@ function validateResults(
   try {
     validationResult(req).throw();
     return next();
-  } catch (err: any) {
-    handleHTTPError(res, 403, { errors: err.array() });
+  } catch (err: ValidationError | any) {
+    handleHTTPError(res, err);
   }
 }
 

@@ -10,12 +10,12 @@ import { handleHTTPError } from "../utils/error.handler";
  */
 async function getProductSales({ headers }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
-    const response = await getSales(id as string, pass as string);
+    const { id } = headers;
+    const response = await getSales(id as string);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
@@ -26,12 +26,12 @@ async function getProductSales({ headers }: Request, res: Response) {
  */
 async function makeSale({ body, headers }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
-    const response = await addSale(id as string, pass as string, body);
+    const { id } = headers;
+    const response = await addSale(id as string, body);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
@@ -42,18 +42,17 @@ async function makeSale({ body, headers }: Request, res: Response) {
  */
 async function deleteSale({ body, headers }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
+    const { id } = headers;
     const { id_day, id_sale } = body;
     const response = await removeSale(
       id as string,
-      pass as string,
       id_day as string,
       id_sale as string
     );
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 

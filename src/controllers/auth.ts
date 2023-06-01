@@ -21,9 +21,9 @@ async function register({ body }: Request, res: Response) {
     };
     const response = await registerUser(data);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
@@ -32,7 +32,7 @@ async function register({ body }: Request, res: Response) {
  * @param param0 Objeto de petición HTTP de express
  * @param res Objeto de respuesta HTTP de express
  */
-async function login({ body }: Request, res: Response) {
+async function signin({ body }: Request, res: Response) {
   try {
     const { email, password } = body;
     const data: UserLogin = {
@@ -41,10 +41,10 @@ async function login({ body }: Request, res: Response) {
     };
     const response = await loginUser(data);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
-export { register, login };
+export { register, signin };

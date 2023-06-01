@@ -1,5 +1,6 @@
 import { UserLogin, UserRegister } from "../interfaces/auth.interface";
 
+import { ClientError } from "../config/error";
 import { UserModel } from "../models/user";
 import { compare } from "bcryptjs";
 import { createToken } from "../utils/jwt.handler";
@@ -19,7 +20,7 @@ async function registerUser({
 }: UserRegister) {
   const verifyUser = await UserModel.findOne({ email });
   if (verifyUser) {
-    throw new Error("USER IS ALREADY REGISTERED");
+    throw new ClientError("USER IS ALREADY REGISTERED", 409);
   }
   const hashPass = await encrypt(password as string);
   const newUser = await UserModel.create({
@@ -46,19 +47,18 @@ async function registerUser({
 async function loginUser({ email, password }: UserLogin) {
   const user = await UserModel.findOne({ "profile.email": email });
   if (!user) {
-    throw new Error("USER IS NOT REGISTERED");
+    throw new ClientError("USER IS NOT REGISTERED", 404);
   }
   const verifyPass = await compare(password, user.profile.password);
   if (!verifyPass) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("INCORRECT PASSWORD", 401);
   }
   const token = createToken(email as string);
 
   // El usuario se tiene que encargar de poner estos datos en los headers de sus sigueintes peticiones
   return {
-    auth: token,
+    Authorization: token,
     id: user._id,
-    pass: user.profile.password,
   };
 }
 

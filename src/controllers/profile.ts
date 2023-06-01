@@ -11,12 +11,12 @@ import { handleHTTPError } from "../utils/error.handler";
  */
 async function userInfo({ headers }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
-    const response = await getUser(id as string, pass as string);
+    const { id } = headers;
+    const response = await getUser(id as string);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
@@ -27,7 +27,7 @@ async function userInfo({ headers }: Request, res: Response) {
  */
 async function userUpdateInfo({ headers, body }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
+    const { id } = headers;
     const { firstname, lastname, company, email, password } = body;
     const data: UserUpdate = {
       firstname,
@@ -36,11 +36,11 @@ async function userUpdateInfo({ headers, body }: Request, res: Response) {
       email,
       password,
     };
-    const response = await updateUser(id as string, pass as string, data);
+    const response = await updateUser(id as string, data);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 
@@ -51,12 +51,12 @@ async function userUpdateInfo({ headers, body }: Request, res: Response) {
  */
 async function userDelete({ headers }: Request, res: Response) {
   try {
-    const { id, pass } = headers;
-    const response = await deleteUser(id as string, pass as string);
+    const { id } = headers;
+    const response = await deleteUser(id as string);
     res.status(200);
-    res.send({ res: response });
+    res.send(response);
   } catch (err) {
-    handleHTTPError(res, 500, err);
+    handleHTTPError(res, err);
   }
 }
 

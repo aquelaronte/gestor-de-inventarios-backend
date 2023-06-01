@@ -1,5 +1,6 @@
 import { encrypt, verify } from "../utils/encrypt.handler";
 
+import { ClientError } from "../config/error";
 import { UserModel } from "../models/user";
 import { UserUpdate } from "../interfaces/account.interface";
 
@@ -9,13 +10,10 @@ import { UserUpdate } from "../interfaces/account.interface";
  * @param pass La contraseña encriptada por el usuario
  * @returns Los datos del usuario
  */
-async function getUser(id: string, pass: string) {
+async function getUser(id: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
   return user;
 }
@@ -29,15 +27,11 @@ async function getUser(id: string, pass: string) {
  */
 async function updateUser(
   id: string,
-  pass: string,
   { firstname, lastname, company, email, password }: UserUpdate
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
 
   if (firstname !== undefined && user.profile.firstname !== firstname) {
@@ -52,8 +46,8 @@ async function updateUser(
     user.profile.lastname = lastname;
   }
 
-  if (company !== undefined && user.profile.company !== company) {
-    user.profile.company = company;
+  if (email !== undefined && user.profile.email !== email) {
+    user.profile.email = email;
   }
 
   if (company !== undefined && user.profile.company !== company) {
@@ -83,13 +77,10 @@ async function updateUser(
  * @param pass La contraseña encriptada por el usuario
  * @returns Si fue exitosa la operación
  */
-async function deleteUser(id: string, pass: string) {
+async function deleteUser(id: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
 
   await user.deleteOne();

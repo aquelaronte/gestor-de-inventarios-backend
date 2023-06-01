@@ -1,3 +1,4 @@
+import { ClientError } from "../config/error";
 import { Product } from "../interfaces/user.interface";
 import { ProductUpdate } from "../interfaces/account.interface";
 import { UserModel } from "../models/user";
@@ -8,13 +9,10 @@ import { UserModel } from "../models/user";
  * @param pass La contraseña encriptada por el usuario
  * @returns Los productos del usuario
  */
-async function getProducts(id: string, pass: string) {
+async function getProducts(id: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
   return user.products;
 }
@@ -28,15 +26,11 @@ async function getProducts(id: string, pass: string) {
  */
 async function addProduct(
   id: string,
-  pass: string,
   { name, purchase_price, sale_price, units }: Product
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
 
   user.products!.push({
@@ -58,13 +52,10 @@ async function addProduct(
  * @param productId Identificador del producto
  * @returns Lista actualizada
  */
-async function removeProduct(id: string, pass: string, productId: string) {
+async function removeProduct(id: string, productId: string) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
 
   /**
@@ -96,16 +87,12 @@ async function removeProduct(id: string, pass: string, productId: string) {
  */
 async function updateProduct(
   id: string,
-  pass: string,
   productId: string,
   { name, purchase_price, sale_price, units }: ProductUpdate
 ) {
   const user = await UserModel.findById(id);
   if (!user) {
-    throw new Error("USER NOT FOUND");
-  }
-  if (pass !== user.profile.password) {
-    throw new Error("INCORRECT PASSWORD");
+    throw new ClientError("USER NOT FOUND", 404);
   }
 
   /**
