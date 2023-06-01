@@ -13,7 +13,7 @@ async function getProductSales({ headers }: Request, res: Response) {
     const { id } = headers;
     const response = await getSales(id as string);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -29,7 +29,7 @@ async function makeSale({ body, headers }: Request, res: Response) {
     const { id } = headers;
     const response = await addSale(id as string, body);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -50,7 +50,7 @@ async function deleteSale({ body, headers }: Request, res: Response) {
       id_sale as string
     );
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }

@@ -14,7 +14,7 @@ async function userInfo({ headers }: Request, res: Response) {
     const { id } = headers;
     const response = await getUser(id as string);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -38,7 +38,7 @@ async function userUpdateInfo({ headers, body }: Request, res: Response) {
     };
     const response = await updateUser(id as string, data);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -54,7 +54,7 @@ async function userDelete({ headers }: Request, res: Response) {
     const { id } = headers;
     const response = await deleteUser(id as string);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }

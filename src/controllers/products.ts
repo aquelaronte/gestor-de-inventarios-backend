@@ -20,7 +20,7 @@ async function productList({ headers }: Request, res: Response) {
     const { id } = headers;
     const response = await getProducts(id as string);
     res.status(200);
-    res.send(response);
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -43,7 +43,7 @@ async function productAdd({ headers, body }: Request, res: Response) {
     };
     const response = await addProduct(id as string, data);
     res.status(200);
-    res.send({ res: response });
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -60,7 +60,7 @@ async function productRemove({ headers, body }: Request, res: Response) {
     const { _id } = body;
     const response = await removeProduct(id as string, _id as string);
     res.status(200);
-    res.send({ res: response });
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
@@ -84,7 +84,7 @@ async function productUpdate({ headers, body }: Request, res: Response) {
     };
     const response = await updateProduct(id as string, _id as string, data);
     res.status(200);
-    res.send({ res: response });
+    res.json({ response });
   } catch (err) {
     handleHTTPError(res, err);
   }
