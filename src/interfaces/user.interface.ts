@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { Types } from "mongoose";
 
 /**
  * Interfaz de producto:
@@ -8,7 +8,7 @@ import mongoose from "mongoose";
  * purchase_price: precio de compra
  */
 interface Product {
-  _id?: mongoose.Types.ObjectId;
+  _id?: Types.ObjectId;
   name: string;
   units: number;
   sale_price: number;
@@ -22,7 +22,7 @@ interface Product {
  * product_total: total de la venta por el producto (Autogenerado)
  */
 interface SoldItem {
-  _id?: mongoose.Types.ObjectId;
+  _id?: Types.ObjectId;
   product_id: string;
   units: number;
   product_total?: number;
@@ -35,7 +35,7 @@ interface SoldItem {
  * total: total de la venta hechas (Autogenerado)
  */
 interface SaleInfo {
-  _id?: mongoose.Types.ObjectId;
+  _id?: Types.ObjectId;
   time?: string;
   sold_items: SoldItem[];
   sale_total: number;
@@ -48,7 +48,7 @@ interface SaleInfo {
  * sales_total: total de las ventas hechas en un día
  */
 interface Sale {
-  _id?: mongoose.Types.ObjectId;
+  _id?: Types.ObjectId;
   date: string;
   sales_info: SaleInfo[];
   sales_total: number;

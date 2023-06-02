@@ -1,4 +1,5 @@
-interface UserRegister {
+// Interfaz hecha para crear cuenta
+interface UserSignUp {
   firstname: string;
   lastname: string;
   email: string;
@@ -6,9 +7,10 @@ interface UserRegister {
   company?: string;
 }
 
-interface UserLogin {
+// Interfaz hecha para iniciar sesión
+interface UserSignIn {
   email: string;
   password: string;
 }
 
-export { UserRegister, UserLogin };
+export { UserSignUp, UserSignIn };

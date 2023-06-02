@@ -1,4 +1,4 @@
-import { UserLogin, UserRegister } from "../interfaces/auth.interface";
+import { UserSignIn, UserSignUp } from "../interfaces/auth.interface";
 
 import { ClientError } from "../config/error";
 import { UserModel } from "../models/user";
@@ -17,7 +17,7 @@ async function registerUser({
   email,
   password,
   company,
-}: UserRegister) {
+}: UserSignUp) {
   const verifyUser = await UserModel.findOne({ email });
   if (verifyUser) {
     throw new ClientError("USER IS ALREADY REGISTERED", 409);
@@ -44,7 +44,7 @@ async function registerUser({
  * @param param0 OBjeto tipo UserSchema
  * @returns Un JWT
  */
-async function loginUser({ email, password }: UserLogin) {
+async function loginUser({ email, password }: UserSignIn) {
   const user = await UserModel.findOne({ "profile.email": email });
   if (!user) {
     throw new ClientError("USER IS NOT REGISTERED", 404);

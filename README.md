@@ -17,6 +17,7 @@ git clone https://github.com/aquelaronte/gestor-de-inventarios-backend.git
 Luego con tu terminal entras a la carpeta y ejecutas el siguiente comando
 
 ```javascript
+cd ./gestor-de-inventarios-backend
 npm install
 ```
 
@@ -41,13 +42,13 @@ NOTA: SI LO QUIERES EJECUTAR CON TYPESCRIPT INSTALA TS-NODE `npm i -g ts-node` y
 
 El servidor cuenta con las siguientes rutas:
 
-- /api/auth/register : crea una cuenta
-- /api/auth/login : inicia sesión
+- /api/auth/signup : crea una cuenta
+- /api/auth/signin : inicia sesión
 - /api/profile : información del usuario
 - /api/products : información de productos añadidos
 - /api/sale : información de ventas
 
-## /api/auth/register
+## /api/auth/signup
 
 A esta ruta únicamente puedes hacer `POST` enviando al cuerpo de la solicitud HTTP un JSON con los datos `firstname, lastname, email, company, password`,
 
@@ -65,7 +66,7 @@ Un ejemplo podría ser este
 
 Al enviar estos datos, la base de datos encripta la contraseña con bcrypt, el servidor responde a la petición HTTP con los datos respondiendo en caso de que haya pasado las validaciones "USER REGISTERED SUCCESSFULLY"
 
-## /api/auth/login
+## /api/auth/signin
 
 A esta ruta únicamente puedes hacer `POST` enviando los datos que ingresaste en `email` y `password`, el sistema respondera con tres datos: un JsonWebToken (JWT), un id, y un pass
 

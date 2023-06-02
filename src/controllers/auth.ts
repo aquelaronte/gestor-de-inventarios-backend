@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
-import { UserLogin, UserRegister } from "../interfaces/auth.interface";
+import { UserSignIn, UserSignUp } from "../interfaces/auth.interface";
 import { loginUser, registerUser } from "../services/auth";
 
 import { handleHTTPError } from "../utils/error.handler";
 
 /**
- * Registra al usuario en la base de dats
+ * Registra al usuario
  * @param param0 Objeto de petición HTTP de express
  * @param res Objeto de respuesta HTTP de express
  */
 async function register({ body }: Request, res: Response) {
   try {
     const { firstname, lastname, email, password, company } = body;
-    const data: UserRegister = {
+    const data: UserSignUp = {
       firstname,
       lastname,
       email,
@@ -28,14 +28,14 @@ async function register({ body }: Request, res: Response) {
 }
 
 /**
- * Verifica al usuario en la base de datos
+ * Verifica al usuario
  * @param param0 Objeto de petición HTTP de express
  * @param res Objeto de respuesta HTTP de express
  */
 async function signin({ body }: Request, res: Response) {
   try {
     const { email, password } = body;
-    const data: UserLogin = {
+    const data: UserSignIn = {
       email,
       password,
     };
