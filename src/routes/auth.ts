@@ -1,12 +1,15 @@
 import { register, signin } from "../controllers/auth";
-import { validateLogin, validateRegister } from "../validators/auth";
+import {
+  signInValidator,
+  signUpValidator,
+} from "../middlewares/validators/auth";
 
 import { Router } from "express";
 
 const router: Router = Router();
 
-router.post("/signup", validateRegister, register);
+router.post("/signup", signUpValidator, register);
 
-router.post("/signin", validateLogin, signin);
+router.post("/signin", signInValidator, signin);
 
 export { router };

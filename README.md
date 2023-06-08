@@ -108,15 +108,23 @@ Obtiene los productos agregados al apartado de `products` en la cuenta
 
 ### POST:
 
-Agrega un producto al apartado de `products` en la cuenta enviando los datos `name, purchase_price, sale_price, units`, de tal manera donde `name` es el nombre del producto, `purchase_price` es el precio de compra, `sale_price` es el precio de venta y `units` son las unidades en stock
+Agrega un producto al apartado de `products` en la cuenta enviando un array con los datos `name, purchase_price, sale_price, units`, de tal manera donde `name` es el nombre del producto, `purchase_price` es el precio de compra, `sale_price` es el precio de venta y `units` son las unidades en stock
 
 ```javascript
-{
-  "name": "Destornillador",
-  "purchase_price": 1200,
-  "sale_price": 2000,
-  "units": 10
-}
+[
+  {
+    name: "Destornillador",
+    purchase_price: 1200,
+    sale_price: 2000,
+    units: 10,
+  },
+  {
+    name: "Martillo",
+    purchase_price: 8200,
+    sale_price: 15000,
+    units: 12,
+  },
+];
 ```
 
 ### DELETE:
@@ -276,5 +284,154 @@ De manera mucho mas simplificada, te muestro la estructura de datos
       total: 'total de ventas'
     }
   ]
+}
+```
+
+# Validación de datos
+
+El servidor al enviar datos no correspondientes enviará una respuesta HTTP indicando cual fue el error y donde está, a continuación, se verán los errores que hay por cada ruta
+
+## /api/auth/signup
+
+Al enviar datos incorrectos a este endpoint, se responderá al usuario con un código HTTP 400 y el dato inválido seguido del mensaje "INVALID USER'S PROVIDED DATA", veamos un ejemplo:
+
+La ruta requiere que envíes los datos
+
+```javascript
+{
+  "firstname" : "primer nombre",
+  "lastname" : "segundo nombre",
+  "email" : "correo@electrónico.com",
+  "password" : "contraseña",
+  "company" : "nombre de negocio"
+}
+```
+
+Pero yo envío los siguientes datos
+
+```javascript
+{
+  "firstname" : "primer nombre",
+  "lastname" : "segundo nombre",
+  "email" : "correoelectrónico.com",
+  "password" : "contraseña",
+  "company" : "nombre de negocio"
+}
+```
+
+Al no incluir @ en mi email, el programa me responderá con el siguiente mensaje
+
+```javascript
+{
+  "msg" : "INVALID USER'S PROVIDED DATA",
+  "data" : ["email"]
+}
+```
+
+Incluso para muchos datos inválidos
+
+```javascript
+{
+  "firstname" : "primer nombre",
+  "lastname" : "segundo nombre",
+  "email" : "correoelectrónico.com",
+  "password" : "",
+  "company" : 2
+}
+```
+
+Al no incluir @ en el email, estar vacía la contraseña y ser el company un dato numérico, se responderá al usuario con el error
+
+```javascript
+{
+  "msg" : "INVALID USER'S PROVIDED DATA",
+  "data" : ["email", "password", "company"]
+}
+```
+
+Los posibles errores que podríam generarse son los siguientes
+
+- El primer nombre está vacío o es un dato diferente de string
+- El segundo nombre está vacío o es un dato diferente de string
+- El correo está vacío, es un dato diferente de string o no encaja en la expresión regular `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
+- La contraseña está vacía, es un dato diferente de string, tiene menos de 8 carácteres o tiene mas de 16 carácteres
+- El nombre del negocio está vacío o es un dato diferente de string
+
+## /api/auth/signin
+
+Los datos esperados para esta ruta son los siguientes
+
+```javascript
+{
+  "email" : "correo electrónico",
+  "password" : "contraseña"
+}
+```
+
+Los posibles errores que podrían generarse son los siguientes
+
+- El correo está vacío o es un dato diferente de string
+- La contraseña está vacía o es un dato diferente de string
+
+## /api/products
+
+Para esta ruta se espera que el usuario tenga en su encabezado los datos id y Authorization, estos datos son generados desde la ruta /api/sigin
+
+### POST
+
+Para hacer `POST` a esta ruta se esperan los siguientes datos
+
+```javascript
+[
+  {
+    name: "nombre del producto",
+    purchase_price: "precio de compra",
+    sale_price: "precio de venta",
+    units: "unidades",
+  },
+  {
+    name: "nombre del producto",
+    purchase_price: "precio de compra",
+    sale_price: "precio de venta",
+    units: "unidades",
+  },
+];
+```
+
+Los posibles errores que podrían generarse son los siguientes:
+
+- La petición enviada no es un array
+- El dato name está vacío o es un dato diferente de string
+- El dato purchase_price está vacío o es un dato diferente de number
+- El dato sale_price está vacío o es un dato diferente de number
+- El dato units está vacío o es un dato diferente de number
+
+En el caso de ser un array, el error generado en el campo data indicará el dato donde hubo error y el índice, por ejemplo
+
+Si yo envío los datos
+
+```javascript
+[
+  {
+    name: "Martillo",
+    purchase_price: "12000",
+    sale_price: "20000",
+    units: 2,
+  },
+  {
+    name: "  ",
+    purchase_price: 22000,
+    sale_price: 10000,
+    units: -1,
+  },
+];
+```
+
+El dato purchase_price del primer objeto es un string, al igual que el dato sale_price, del segundo objeto, el nombre está vacío y las unidades son negativas, por ende, se me generaría la siguiente respuesta
+
+```javascript
+{
+  "msg" : "INVALID USER'S PRODUCT DATA",
+  "data" : ["purchase_price 0", "sale_price 0", "name 1", "units 1"]
 }
 ```

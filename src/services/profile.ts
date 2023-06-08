@@ -3,6 +3,7 @@ import { encrypt, verify } from "../utils/encrypt.handler";
 import { ClientError } from "../config/error";
 import { UserModel } from "../models/user";
 import { UserUpdate } from "../interfaces/account.interface";
+import { userIdErrorHandler } from "../utils/userid.handler";
 
 /**
  * Obtiene la información de perfil del usuario desde la base de datos
@@ -11,10 +12,7 @@ import { UserUpdate } from "../interfaces/account.interface";
  * @returns Los datos del usuario
  */
 async function getUser(id: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
   return user;
 }
 
@@ -29,20 +27,19 @@ async function updateUser(
   id: string,
   { firstname, lastname, company, email, password }: UserUpdate
 ) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
 
   if (firstname !== undefined && user.profile.firstname !== firstname) {
+    firstname =
+      firstname.charAt(0).toUpperCase() +
+      firstname.slice(1).toLocaleLowerCase();
+
     user.profile.firstname = firstname;
   }
 
   if (lastname !== undefined && user.profile.lastname !== lastname) {
-    user.profile.lastname = lastname;
-  }
-
-  if (lastname !== undefined && user.profile.lastname !== lastname) {
+    lastname =
+      lastname.charAt(0).toUpperCase() + lastname.slice(1).toLocaleLowerCase();
     user.profile.lastname = lastname;
   }
 
@@ -51,6 +48,8 @@ async function updateUser(
   }
 
   if (company !== undefined && user.profile.company !== company) {
+    company =
+      company.charAt(0).toUpperCase() + company.slice(1).toLocaleLowerCase();
     user.profile.company = company;
   }
 
@@ -78,10 +77,7 @@ async function updateUser(
  * @returns Si fue exitosa la operación
  */
 async function deleteUser(id: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
 
   await user.deleteOne();
 

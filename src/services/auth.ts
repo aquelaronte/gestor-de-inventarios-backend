@@ -18,24 +18,29 @@ async function registerUser({
   password,
   company,
 }: UserSignUp) {
-  const verifyUser = await UserModel.findOne({ email });
-  if (verifyUser) {
-    throw new ClientError("USER IS ALREADY REGISTERED", 409);
-  }
-  const hashPass = await encrypt(password as string);
-  const newUser = await UserModel.create({
-    profile: {
-      firstname,
-      lastname,
-      email,
-      password: hashPass,
-      company,
-    },
-    products: [],
-    sales: [],
-  });
-  if (newUser) {
+  try {
+    const hashPass = await encrypt(password as string);
+    firstname =
+      firstname.charAt(0).toUpperCase() +
+      firstname.slice(1).toLocaleLowerCase();
+    lastname =
+      lastname.charAt(0).toUpperCase() + lastname.slice(1).toLocaleLowerCase();
+    company =
+      company.charAt(0).toUpperCase() + company.slice(1).toLocaleLowerCase();
+    await UserModel.create({
+      profile: {
+        firstname,
+        lastname,
+        email,
+        password: hashPass,
+        company,
+      },
+      products: [],
+      sales: [],
+    });
     return "USER WAS SUCCESSFULLY REGISTERED";
+  } catch (err) {
+    throw new ClientError("USER IS ALREADY REGISTERED", 409);
   }
 }
 

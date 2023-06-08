@@ -4,7 +4,7 @@ interface UserSignUp {
   lastname: string;
   email: string;
   password: string;
-  company?: string;
+  company: string;
 }
 
 // Interfaz hecha para iniciar sesión

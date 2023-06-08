@@ -1,20 +1,17 @@
 import { deleteSale, getProductSales, makeSale } from "../controllers/sales";
-import { validateDeleteSale, validateMakeSale } from "../validators/sales";
+import {
+  saleAddValidator,
+  saleIdValidator,
+} from "../middlewares/validators/sales";
 
 import { Router } from "express";
 import { checkSession } from "../middlewares/checkSession";
-import { validateQueryParams } from "../utils/queryParams.validator";
+import { idValidator } from "../middlewares/validators/id";
 
 const router: Router = Router();
 
-router.get("/", validateQueryParams, checkSession, getProductSales);
-router.post("/", validateQueryParams, checkSession, validateMakeSale, makeSale);
-router.delete(
-  "/",
-  validateQueryParams,
-  checkSession,
-  validateDeleteSale,
-  deleteSale
-);
+router.get("/", checkSession, idValidator, getProductSales);
+router.post("/", checkSession, saleAddValidator, makeSale);
+router.delete("/", checkSession, idValidator, saleIdValidator, deleteSale);
 
 export { router };

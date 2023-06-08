@@ -1,6 +1,7 @@
 import { ClientError } from "../config/error";
-import { SaleInfo, SoldItem } from "../interfaces/user.interface";
+import { Sale, SaleInfo, SoldItem } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
+import { userIdErrorHandler } from "../utils/userid.handler";
 import { zeroPad } from "../utils/zeroPad.util";
 
 /**
@@ -10,10 +11,7 @@ import { zeroPad } from "../utils/zeroPad.util";
  * @returns Las ventas del usuario
  */
 async function getSales(id: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
   return user.sales;
 }
 
@@ -25,10 +23,7 @@ async function getSales(id: string) {
  * @returns Si fue exitosa la operación
  */
 async function addSale(id: string, soldProducts: SoldItem[]) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
   if (user.products.length == 0) {
     throw new ClientError("USER MUST HAVE AT LEAST ONE PRODUCT", 400);
   }
@@ -107,7 +102,10 @@ async function addSale(id: string, soldProducts: SoldItem[]) {
   user.sales[last_index].sales_total! += total;
   user.isNew = false;
   await user.save();
-  return user.sales;
+  return {
+    sales: user.sales,
+    products: user.products,
+  };
 }
 
 /**
@@ -119,17 +117,14 @@ async function addSale(id: string, soldProducts: SoldItem[]) {
  * @returns Si fue exitosa la operación
  */
 async function removeSale(id: string, id_day: string, id_sale: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(UserModel, id);
   if (user.products.length == 0) {
     throw new ClientError("USER MUST HAVE AT LEAST ONE PRODUCT", 400);
   }
 
   // Averiguamos el indice del día
   let sale_day = user.sales!.findIndex(
-    (total_sale) => total_sale.date == id_day
+    (total_sale: Sale) => total_sale.date == id_day
   );
 
   if (sale_day == -1) {
@@ -138,7 +133,7 @@ async function removeSale(id: string, id_day: string, id_sale: string) {
 
   // Averiguamos el índice de la venta
   let sale_time = user.sales![sale_day].sales_info?.findIndex(
-    (sale) => sale.time == id_sale
+    (sale: SaleInfo) => sale.time == id_sale
   );
 
   if (sale_time == -1) {
@@ -162,7 +157,10 @@ async function removeSale(id: string, id_day: string, id_sale: string) {
   user.sales![sale_day].sales_info?.splice(sale_time as number, 1);
   user.isNew = false;
   await user.save();
-  return user.sales;
+  return {
+    sales: user.sales,
+    products: user.products,
+  };
 }
 
 export { getSales, addSale, removeSale };

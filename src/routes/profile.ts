@@ -2,21 +2,21 @@ import { userDelete, userInfo, userUpdateInfo } from "../controllers/profile";
 
 import { Router } from "express";
 import { checkSession } from "../middlewares/checkSession";
-import { validateQueryParams } from "../utils/queryParams.validator";
-import { validateUpdateUserInfo } from "../validators/account";
+import { idValidator } from "../middlewares/validators/id";
+import { profileUpdateValidator } from "../middlewares/validators/profile";
 
 const router: Router = Router();
 
-router.get("/", checkSession, validateQueryParams, userInfo);
+router.get("/", checkSession, idValidator, userInfo);
 
 router.put(
   "/",
   checkSession,
-  validateQueryParams,
-  validateUpdateUserInfo,
+  idValidator,
+  profileUpdateValidator,
   userUpdateInfo
 );
 
-router.delete("/", checkSession, validateQueryParams, userDelete);
+router.delete("/", checkSession, idValidator, userDelete);
 
 export { router };

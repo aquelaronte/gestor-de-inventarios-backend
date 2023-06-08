@@ -34,14 +34,7 @@ async function productList({ headers }: Request, res: Response) {
 async function productAdd({ headers, body }: Request, res: Response) {
   try {
     const { id } = headers;
-    const { name, purchase_price, sale_price, units } = body;
-    const data: Product = {
-      name,
-      purchase_price,
-      sale_price,
-      units,
-    };
-    const response = await addProduct(id as string, data);
+    const response = await addProduct(id as string, body as Product[]);
     res.status(200);
     res.json({ response });
   } catch (err) {

@@ -1,38 +1,40 @@
 import {
+  addProductsValidator,
+  productIdValidator,
+  productUpdateValidator,
+} from "../middlewares/validators/products";
+import {
   productAdd,
   productList,
   productRemove,
   productUpdate,
 } from "../controllers/products";
-import {
-  validateProductInfo,
-  validateUpdateProductInfo,
-} from "../validators/account";
 
 import { Router } from "express";
 import { checkSession } from "../middlewares/checkSession";
-import { validateQueryParams } from "../utils/queryParams.validator";
+import { idValidator } from "../middlewares/validators/id";
 
 const router: Router = Router();
 
-router.get("/", checkSession, validateQueryParams, productList);
+router.get("/", checkSession, idValidator, productList);
 
-router.post(
-  "/",
-  checkSession,
-  validateQueryParams,
-  validateProductInfo,
-  productAdd
-);
+router.post("/", checkSession, idValidator, addProductsValidator, productAdd);
 
 router.put(
   "/",
   checkSession,
-  validateQueryParams,
-  validateUpdateProductInfo,
+  idValidator,
+  productIdValidator,
+  productUpdateValidator,
   productUpdate
 );
 
-router.delete("/", checkSession, validateQueryParams, productRemove);
+router.delete(
+  "/",
+  checkSession,
+  idValidator,
+  productIdValidator,
+  productRemove
+);
 
 export { router };

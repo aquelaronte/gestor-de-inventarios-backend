@@ -2,6 +2,8 @@ import { ClientError } from "../config/error";
 import { Product } from "../interfaces/user.interface";
 import { ProductUpdate } from "../interfaces/account.interface";
 import { UserModel } from "../models/user";
+import { userIdErrorHandler } from "../utils/userid.handler";
+import { refillStock } from "../interfaces/product.interface";
 
 /**
  * Obtiene los productos en la cuenta del usuario
@@ -10,10 +12,7 @@ import { UserModel } from "../models/user";
  * @returns Los productos del usuario
  */
 async function getProducts(id: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(id);
   return user.products;
 }
 
@@ -24,22 +23,14 @@ async function getProducts(id: string) {
  * @param product Objeto tipo Product
  * @returns Los productos del usuario
  */
-async function addProduct(
-  id: string,
-  { name, purchase_price, sale_price, units }: Product
-) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
-
-  user.products!.push({
-    name,
-    purchase_price,
-    sale_price,
-    units,
+async function addProduct(id: string, products: Product[]) {
+  const user = await userIdErrorHandler(id);
+  products.forEach((product) => {
+    product.name =
+      product.name.charAt(0).toLocaleUpperCase() +
+      product.name.slice(1).toLocaleLowerCase();
   });
-
+  user.products! = [...user.products!, ...products];
   user.isNew = false;
   await user.save();
   return user.products;
@@ -53,17 +44,14 @@ async function addProduct(
  * @returns Lista actualizada
  */
 async function removeProduct(id: string, productId: string) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
+  const user = await userIdErrorHandler(id);
 
   /**
    * Busca el indice en la lista de productos donde
    * el id proporcionado por el usuario sea el mismo del producto a encontrar
    */
   const productIndex = user.products!.findIndex(
-    (product) => product._id!.toString() === productId
+    (product: Product) => product._id!.toString() === productId
   );
 
   if (productIndex === -1) {
@@ -90,27 +78,24 @@ async function updateProduct(
   productId: string,
   { name, purchase_price, sale_price, units }: ProductUpdate
 ) {
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new ClientError("USER NOT FOUND", 404);
-  }
-
+  const user = await userIdErrorHandler(id);
   /**
    * Busca el indice en la lista de productos donde
    * el id proporcionado por el usuario sea el mismo del producto a encontrar
    */
   const productIndex = user.products!.findIndex(
-    (product) => product._id!.toString() === productId
+    (product: Product) => product._id!.toString() === productId
   );
 
   if (productIndex === -1) {
-    throw new Error("PRODUCT NOT FOUND");
+    throw new ClientError("PRODUCT NOT FOUND", 404);
   }
 
   // Validaciones, valida las propiedades, si las pasadas por el usuario son undefined entonces no se actualizan
   // Pero si no son undefined y son diferentes a las ya puestas entonces se actualizan
   if (name !== undefined && user.products[productIndex].name !== name) {
-    user.products[productIndex].name = name;
+    user.products[productIndex].name =
+      name.charAt(0).toLocaleUpperCase() + name.slice(1).toLocaleLowerCase();
   }
 
   if (
@@ -131,6 +116,23 @@ async function updateProduct(
     user.products[productIndex].units = units;
   }
 
+  user.isNew = false;
+  await user.save();
+
+  return user.products;
+}
+
+async function refillStock(id: string, stock: refillStock[]) {
+  const user = await userIdErrorHandler(id);
+  for (let i = 0; i < user.products.length; i++) {
+    const product = user.products[i];
+    for (let j = 0; j < stock.length; j++) {
+      const refillProduct = stock[j];
+      if (product._id!.toString() == refillProduct.product_id) {
+        user.products[i].units += refillProduct.units;
+      }
+    }
+  }
   user.isNew = false;
   await user.save();
 
