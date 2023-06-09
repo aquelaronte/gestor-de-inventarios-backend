@@ -1,7 +1,5 @@
 import { encrypt, verify } from "../utils/encrypt.handler";
 
-import { ClientError } from "../config/error";
-import { UserModel } from "../models/user";
 import { UserUpdate } from "../interfaces/account.interface";
 import { userIdErrorHandler } from "../utils/userid.handler";
 
@@ -12,7 +10,7 @@ import { userIdErrorHandler } from "../utils/userid.handler";
  * @returns Los datos del usuario
  */
 async function getUser(id: string) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
   return user;
 }
 
@@ -27,7 +25,7 @@ async function updateUser(
   id: string,
   { firstname, lastname, company, email, password }: UserUpdate
 ) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
 
   if (firstname !== undefined && user.profile.firstname !== firstname) {
     firstname =
@@ -77,7 +75,7 @@ async function updateUser(
  * @returns Si fue exitosa la operación
  */
 async function deleteUser(id: string) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
 
   await user.deleteOne();
 

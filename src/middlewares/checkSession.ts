@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { verifyToken } from "../utils/jwt.handler";
+import { handleHTTPError } from "../utils/error.handler";
 
 /**
  * Verifica si el usuario inició sesión
@@ -9,14 +10,13 @@ import { verifyToken } from "../utils/jwt.handler";
  * @param next Pasa al siguiente middleware
  */
 function checkSession(req: Request, res: Response, next: NextFunction) {
-  // Se separa porque el token llega con un token prefix de bearer
-  const auth = req.headers.authorization?.split(" ")[1];
-  const verified = verifyToken(auth as string);
-
-  if (verified) {
+  try {
+    // Se separa porque el token llega con un token prefix de bearer
+    const auth = req.headers.authorization?.split(" ")[1];
+    verifyToken(auth as string);
     next();
-  } else {
-    res.status(401).send("USER NEEDS VERIFICATION");
+  } catch {
+    handleHTTPError(res, 401);
   }
 }
 

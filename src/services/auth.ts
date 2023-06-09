@@ -58,7 +58,7 @@ async function loginUser({ email, password }: UserSignIn) {
   if (!verifyPass) {
     throw new ClientError("INCORRECT PASSWORD", 401);
   }
-  const token = createToken(email as string);
+  const token = createToken(user._id.toString());
 
   // El usuario se tiene que encargar de poner estos datos en los headers de sus sigueintes peticiones
   return {

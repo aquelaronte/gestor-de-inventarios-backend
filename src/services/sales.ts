@@ -1,6 +1,5 @@
 import { ClientError } from "../config/error";
 import { Sale, SaleInfo, SoldItem } from "../interfaces/user.interface";
-import { UserModel } from "../models/user";
 import { userIdErrorHandler } from "../utils/userid.handler";
 import { zeroPad } from "../utils/zeroPad.util";
 
@@ -11,7 +10,7 @@ import { zeroPad } from "../utils/zeroPad.util";
  * @returns Las ventas del usuario
  */
 async function getSales(id: string) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
   return user.sales;
 }
 
@@ -23,7 +22,7 @@ async function getSales(id: string) {
  * @returns Si fue exitosa la operación
  */
 async function addSale(id: string, soldProducts: SoldItem[]) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
   if (user.products.length == 0) {
     throw new ClientError("USER MUST HAVE AT LEAST ONE PRODUCT", 400);
   }
@@ -117,7 +116,7 @@ async function addSale(id: string, soldProducts: SoldItem[]) {
  * @returns Si fue exitosa la operación
  */
 async function removeSale(id: string, id_day: string, id_sale: string) {
-  const user = await userIdErrorHandler(UserModel, id);
+  const user = await userIdErrorHandler(id);
   if (user.products.length == 0) {
     throw new ClientError("USER MUST HAVE AT LEAST ONE PRODUCT", 400);
   }

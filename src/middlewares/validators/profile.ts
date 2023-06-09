@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { ClientError } from "../../config/error";
 import { handleHTTPError } from "../../utils/error.handler";
+import { capitalizeArray, capitalizeString } from "../../utils/capitalize.util";
 
 function profileUpdateValidator(
   req: Request,
@@ -11,18 +12,22 @@ function profileUpdateValidator(
   try {
     const faultData: string[] = [];
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const { firstname, lastname, email, password, company } = req.body;
+    let { firstname, lastname, email, password, company } = req.body;
     if (
       firstname != undefined &&
       (typeof firstname != "string" || firstname.trim().length == 0)
     ) {
       faultData.push(`firstname`);
+    } else if (firstname) {
+      firstname = capitalizeString(firstname);
     }
     if (
       lastname != undefined &&
       (typeof lastname != "string" || lastname.trim().length == 0)
     ) {
       faultData.push(`lastname`);
+    } else if (lastname) {
+      lastname = capitalizeString(lastname);
     }
     if (
       email != undefined &&
@@ -44,12 +49,16 @@ function profileUpdateValidator(
       (typeof company != "string" || company.trim().length == 0)
     ) {
       faultData.push(`company`);
+    } else if (company) {
+      company = capitalizeString(company);
     }
     if (faultData.length >= 1) {
       throw new ClientError("INVALID USER'S PROFILE DATA", 400, faultData);
     }
     next();
   } catch (err: ClientError | unknown) {
+    console.log(err);
+
     handleHTTPError(res, err);
   }
 }

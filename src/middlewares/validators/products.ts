@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { ClientError } from "../../config/error";
 import { handleHTTPError } from "../../utils/error.handler";
+import { capitalizeString } from "../../utils/capitalize.util";
 
 function addProductsValidator(
   { body }: Request,
@@ -43,6 +44,7 @@ function addProductsValidator(
       ) {
         faultData.push(`units ${i}`);
       }
+      body[i].name = capitalizeString(product.name);
     }
     if (faultData.length >= 1) {
       throw new ClientError("INVALID USER'S PRODUCT DATA", 400, faultData);
@@ -95,6 +97,8 @@ function productUpdateValidator(
       (typeof name != "string" || name.trim().length <= 0)
     ) {
       faultData.push(`name`);
+    } else if (name) {
+      name = capitalizeString(name);
     }
     if (
       purchase_price != undefined &&
